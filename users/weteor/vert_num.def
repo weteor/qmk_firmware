@@ -1,0 +1,11 @@
+
+COMB(qa1, 	KC_1, 	KC_Q, KC_A)
+COMB(wr2, 	KC_2,	KC_W, KC_R)
+COMB(fs3, 	KC_3, 	KC_F, KC_S)
+COMB(pt4, 	KC_4,	KC_P, KC_T)
+COMB(gd5, 	KC_5,	KC_G, KC_D)
+COMB(jh6, 	KC_6,	KC_J, KC_H)
+COMB(ln7, 	KC_7,	KC_L, KC_N)
+COMB(ue8, 	KC_8, 	KC_U, KC_E)
+COMB(yi9, 	KC_9, 	KC_Y, KC_I)
+COMB(ddoto0, 	KC_0,	KC_QUOT, KC_O)

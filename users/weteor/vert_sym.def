@@ -1,0 +1,12 @@
+
+COMB(qaslash,		KC_SLASH,	KC_A, KC_Q) 
+COMB(wrlbrc, 		KC_LBRC,	KC_R, KC_W)
+COMB(fslcbr,		KC_LCBR,	KC_S, KC_F)
+COMB(ptlprn, 		KC_LPRN,	KC_T, KC_P)
+COMB(gdeql,		KC_EQL,	        KC_D, KC_G)
+
+COMB(jhastr,		KC_ASTR,	KC_J, KC_H)
+COMB(lnrprn,		KC_RPRN,	KC_L, KC_N)
+COMB(euommalcbr,	KC_RCBR,	KC_U, KC_E)
+COMB(iyotlbrc,		KC_RBRC,	KC_Y, KC_I)
+COMB(oquotbsls,		KC_BSLS,	KC_QUOT, KC_O)
