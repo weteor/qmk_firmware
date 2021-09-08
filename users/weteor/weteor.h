@@ -79,8 +79,8 @@ enum keycodes {
 #define ______________HANDSDOWN_ALT_L2_____________        KC_R,    KC_S,    KC_N,    KC_T,    KC_G
 #define ______________HANDSDOWN_ALT_L3_____________        KC_X,    KC_M,    KC_L,    KC_D,    KC_B 
 
-#define ______________HANDSDOWN_ALT_R1_____________        KC_QUOT,    KC_Y,    KC_U,    KC_Q,    KC_J
-#define ______________HANDSDOWN_ALT_R2_____________        KC_K,    KC_I,    KC_E,    KC_A,    KC_O
+#define ______________HANDSDOWN_ALT_R1_____________        KC_QUOT,    KC_Y,    KC_U,    KC_J,    KC_Q
+#define ______________HANDSDOWN_ALT_R2_____________        KC_K,    KC_I,    KC_E,    KC_O,    KC_A
 #define ______________HANDSDOWN_ALT_R3_____________        KC_Z,    KC_P,    KC_COMM, KC_DOT,  KC_SCLN
 #define ____THUMB_L____ LT(_NUM, KC_ESC), KC_SPC, LA_NAV
 #define ____THUMB_R____ LA_SYM, KC_ENT, KC_LSFT

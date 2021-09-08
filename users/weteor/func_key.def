@@ -1,3 +1,5 @@
 
 COMB(wfesc,	KC_TAB,		KC_F, KC_W)
+COMB(chesc,	KC_TAB,		KC_C, KC_H)
 COMB(uybspc, 	KC_BSPC,	KC_Y, KC_U)
+COMB(ujbspc, 	KC_BSPC,	KC_J, KC_U)
