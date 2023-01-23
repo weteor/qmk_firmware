@@ -1,4 +1,4 @@
-// Copyright 2022 Rossman360 (@rossmontsinger)
+// Copyright 2023 Rossman360 (@rossmontsinger)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #pragma once
