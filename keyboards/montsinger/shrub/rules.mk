@@ -1,15 +1,3 @@
-# MCU name
-MCU = RP2040
-BOOTLOADER = rp2040
-BOARD = GENERIC_RP_RP2040
-
-# MCU name
-#MCU = atmega32u4
-
-# Bootloader selection
-#BOOTLOADER = atmel-dfu
-
-
 # Build Options
 #   change yes to no to disable
 #
