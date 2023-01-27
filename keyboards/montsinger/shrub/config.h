@@ -5,15 +5,6 @@
 
 #include "config_common.h"
 
-#define VENDOR_ID 0x1234
-#define PRODUCT_ID 0x5678
-#define DEVICE_VER 0x0001
-
-
-/* key matrix size */
-#define MATRIX_ROWS 8
-#define MATRIX_COLS 7
-
 #define DIODE_DIRECTION ROW2COL
 
 
