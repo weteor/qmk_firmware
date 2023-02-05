@@ -1,5 +1,4 @@
-// Copyright 2022 GRINkeebs (@policium)
-// SPDX-License-Identifier: GPL-2.0-or-later
+
 
 #include QMK_KEYBOARD_H
 #include "i2c_master.h"
@@ -176,7 +175,7 @@ static matrix_row_t read_cols(uint8_t row) {
                 // The initial state was all ones and any depressed key at a given column for the currently selected row will have its bit flipped to zero.
                 // The return value is a row as represented in the generic matrix code were the rightmost bits represent the lower columns and zeroes represent non-depressed keys while ones represent depressed keys.
                 // the pins connected to eact columns are sequential, but in reverse order, and counting from zero down (col 5 -> GPIO04, col6  -> GPIO03 and so on).
-//ross deleted column 5
+                data |= (port0 & 0x01) << 4;
                 data |= (port0 & 0x02) << 2;
                 data |= (port0 & 0x04);
                 data |= (port0 & 0x08) >> 2;
@@ -219,12 +218,10 @@ static void select_row(uint8_t row) {
                                 // do nothing
         } else {
             switch(row) {
-//ross added a row at the bottom and increased all the case numbers by 1
-                case 5: port1 &= ~(1 << 0); break;
-                case 6: port1 &= ~(1 << 1); break;
-                case 7: port1 &= ~(1 << 2); break;
-                case 8: port1 &= ~(1 << 3); break;
-                case 9: port1 &= ~(1 << 4); break;
+                case 4: port1 &= ~(1 << 0); break;
+                case 5: port1 &= ~(1 << 1); break;
+                case 6: port1 &= ~(1 << 2); break;
+                case 7: port1 &= ~(1 << 3); break;
                 default:                    break;
             }
 
