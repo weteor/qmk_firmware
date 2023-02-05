@@ -1,33 +1,11 @@
-/*
-Copyright 2013 Oleg Kostyuk <cub.uanic@gmail.com>
-          2020 Pierre Chevalier <pierrechevalier83@gmail.com>
-          2021 weteor
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*
- * This code was heavily inspired by the ergodox_ez keymap, and modernized
- * to take advantage of the quantum.h microcontroller agnostics gpio control
- * abstractions and use the macros defined in config.h for the wiring as opposed
- * to repeating that information all over the place.
- */
+// Copyright 2022 GRINkeebs (@policium)
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
 #include "i2c_master.h"
 
 extern i2c_status_t tca9555_status;
+#undef I2C_TIMEOUT
 #define I2C_TIMEOUT 1000
 
 // I2C address:
@@ -53,7 +31,7 @@ uint8_t init_tca9555(void) {
 
     // I2C subsystem
     if (i2c_initialized == 0) {
-        i2c_init();  // on pins D(1,0)
+        i2c_init();
         i2c_initialized = true;
         wait_ms(I2C_TIMEOUT);
     }
@@ -65,8 +43,8 @@ uint8_t init_tca9555(void) {
     uint8_t conf[2] = {
         // This means: read all pins of port 0
         0b11111111,
-        // This means: we will write on pins 0 to 3 on port 1. read rest
-        0b11110000,
+        // This means: read all pins of port 1
+        0b11111111,
     };
     tca9555_status = i2c_writeReg(I2C_ADDR, IODIRA, conf, 2, I2C_TIMEOUT);
 
@@ -136,10 +114,10 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
     }
 
     bool changed = false;
-    for (uint8_t i = 0; i < MATRIX_ROWS_PER_SIDE; i++) {
+    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
         // select rows from left and right hands
         uint8_t left_index  = i;
-        uint8_t right_index = i + MATRIX_ROWS_PER_SIDE;
+        uint8_t right_index = i + MATRIX_ROWS;
         select_row(left_index);
         select_row(right_index);
 
@@ -160,20 +138,21 @@ static void init_cols(void) {
     // not needed, already done as part of init_tca9555()
 
     // init on mcu
-    pin_t matrix_col_pins_mcu[MATRIX_COLS_PER_SIDE] = MATRIX_COL_PINS_L;
-    for (int pin_index = 0; pin_index < MATRIX_COLS_PER_SIDE; pin_index++) {
+    pin_t matrix_col_pins_mcu[MATRIX_COLS] = MATRIX_COL_PINS;
+    for (int pin_index = 0; pin_index < MATRIX_COLS; pin_index++) {
         pin_t pin = matrix_col_pins_mcu[pin_index];
         setPinInput(pin);
         writePinHigh(pin);
     }
 }
 
+//COLS
 static matrix_row_t read_cols(uint8_t row) {
-    if (row < MATRIX_ROWS_PER_SIDE) {
-        pin_t        matrix_col_pins_mcu[MATRIX_COLS_PER_SIDE] = MATRIX_COL_PINS_L;
+    if (row < MATRIX_ROWS) {
+        pin_t        matrix_col_pins_mcu[MATRIX_COLS] = MATRIX_COL_PINS;
         matrix_row_t current_row_value                         = 0;
         // For each col...
-        for (uint8_t col_index = 0; col_index < MATRIX_COLS_PER_SIDE; col_index++) {
+        for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) {
             // Select the col pin to read (active low)
             uint8_t pin_state = readPin(matrix_col_pins_mcu[col_index]);
 
@@ -197,7 +176,7 @@ static matrix_row_t read_cols(uint8_t row) {
                 // The initial state was all ones and any depressed key at a given column for the currently selected row will have its bit flipped to zero.
                 // The return value is a row as represented in the generic matrix code were the rightmost bits represent the lower columns and zeroes represent non-depressed keys while ones represent depressed keys.
                 // the pins connected to eact columns are sequential, but in reverse order, and counting from zero down (col 5 -> GPIO04, col6  -> GPIO03 and so on).
-                data |= (port0 & 0x01) << 4;
+//ross deleted column 5
                 data |= (port0 & 0x02) << 2;
                 data |= (port0 & 0x04);
                 data |= (port0 & 0x08) >> 2;
@@ -216,20 +195,21 @@ static void unselect_rows(void) {
     // direction
 
     // unselect rows on microcontroller
-    pin_t matrix_row_pins_mcu[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_L;
-    for (int pin_index = 0; pin_index < MATRIX_ROWS_PER_SIDE; pin_index++) {
+    pin_t matrix_row_pins_mcu[MATRIX_ROWS] = MATRIX_ROW_PINS;
+    for (int pin_index = 0; pin_index < MATRIX_ROWS; pin_index++) {
         pin_t pin = matrix_row_pins_mcu[pin_index];
         setPinInput(pin);
         writePinLow(pin);
     }
 }
 
+//ROWS
 static void select_row(uint8_t row) {
     uint8_t port1 = 0xff;
 
-    if (row < MATRIX_ROWS_PER_SIDE) {
+    if (row < MATRIX_ROWS) {
         // select on atmega32u4
-        pin_t matrix_row_pins_mcu[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_L;
+        pin_t matrix_row_pins_mcu[MATRIX_ROWS] = MATRIX_ROW_PINS;
         pin_t pin                                       = matrix_row_pins_mcu[row];
         setPinOutput(pin);
         writePinLow(pin);
@@ -239,18 +219,18 @@ static void select_row(uint8_t row) {
                                 // do nothing
         } else {
             switch(row) {
-                case 4: port1 &= ~(1 << 0); break;
-                case 5: port1 &= ~(1 << 1); break;
-                case 6: port1 &= ~(1 << 2); break;
-                case 7:
-                    port1 &= ~(1 << 3);
-                    break;
+//ross added a row at the bottom and increased all the case numbers by 1
+                case 5: port1 &= ~(1 << 0); break;
+                case 6: port1 &= ~(1 << 1); break;
+                case 7: port1 &= ~(1 << 2); break;
+                case 8: port1 &= ~(1 << 3); break;
+                case 9: port1 &= ~(1 << 4); break;
                 default:                    break;
             }
 
             tca9555_status = i2c_writeReg(I2C_ADDR, OREGP1, &port1, 1, I2C_TIMEOUT);
             // Select the desired row by writing a byte for the entire GPIOB bus where only the bit representing the row we want to select is a zero (write instruction) and every other bit is a one.
-            // Note that the row - MATRIX_ROWS_PER_SIDE reflects the fact that being on the right hand, the columns are numbered from MATRIX_ROWS_PER_SIDE to MATRIX_ROWS, but the pins we want to write to are indexed from zero up on the GPIOB bus.
+            // Note that the row - MATRIX_ROWS reflects the fact that being on the right hand, the columns are numbered from MATRIX_ROWS to MATRIX_ROWS, but the pins we want to write to are indexed from zero up on the GPIOB bus.
         }
     }
 }
